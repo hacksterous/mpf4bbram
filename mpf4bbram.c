@@ -46,9 +46,12 @@ STATIC mp_obj_t mpf4bbram_enable (void) {
 #ifdef BARE_M
 	//enable power interface clock
     __HAL_RCC_PWR_CLK_ENABLE();
+	
 	//enable BBRAM interface clock
 	SET_BIT(RCC->AHB1ENR, RCC_AHB1ENR_BKPSRAMEN);
-	//Enable access to RTC domain
+
+	//Enable access to RTC domain by setting the DBP bit
+	//DBP = Disable Backup Protection
 	HAL_PWR_EnableBkUpAccess();
 #endif
     return mp_const_none;
