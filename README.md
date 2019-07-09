@@ -34,3 +34,7 @@ is removed, will erase the data stored in backup SRAM.
 ```
 mpf4bbram.kill()
 ```
+#### Compiling MicroPython
+```
+make  BOARD=BLACK_F407VE  USER_C_MODULES=. CFLAGS_EXTRA="-DBARE_M=1 -DMODULE_MPF4BBRAM_ENABLED=1"
+```
