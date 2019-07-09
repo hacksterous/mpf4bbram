@@ -68,7 +68,6 @@ STATIC mp_obj_t mpf4bbram_init (void) {
 	uint32_t regulator_pwr = 0;
 #ifdef BARE_M
 	regulator_pwr = enable_bak_reg_pwr();
-	mpf4bbram_enable();
 #endif
     return mp_obj_new_int(regulator_pwr);
 }
