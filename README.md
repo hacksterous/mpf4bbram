@@ -30,7 +30,7 @@ mpf4bbram.disable()
 #### Read from BKPSRAM
 ```
 mpf4bbram.enable()
-data = mpf4bbram.write32_bbram (index)
+data = mpf4bbram.read32_bbram (index)
 mpf4bbram.disable()
 ```
 
