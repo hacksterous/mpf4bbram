@@ -5,7 +5,7 @@ Use the battery-backed RAM and registers in STM32F4xx
 ### Usage
 
 #### Initialization
-One-time initialization in boot.py or main.pyswitch power supply to battery-backed SRAM.
+One-time initialization in boot.py or main.py to power battery-backed SRAM using the coin-cell (VBAT).
 ```
 import mpf4bbram
 mpf4bbram.init()
