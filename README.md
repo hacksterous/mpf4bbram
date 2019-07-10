@@ -22,11 +22,17 @@ index is the 32-bit offset into the  BKPSRAM space (0x4002 4000 - 0x4002 4FFF).
 data is a 32-bit data
 
 #### Disable accidental writes
-Can enable again when required.
+This can be enabled again when required.
 ```
 mpf4bbram.disable()
 ```
 
+#### Read from BKPSRAM
+```
+mpf4bbram.enable()
+data = mpf4bbram.write32_bbram (index)
+mpf4bbram.disable()
+```
 
 #### Kill BKPSRAM power
 This removes battery power from the backup SRAM and if main power
