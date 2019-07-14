@@ -97,7 +97,6 @@ STATIC mp_obj_t mpf4bbram_write32_bbreg (mp_obj_t oindex, mp_obj_t odata) {
 }
 
 STATIC mp_obj_t mpf4bbram_write32_bbram (mp_obj_t oindex, mp_obj_t odata) {
-	//odata could be int, uint32 or float (single precision)
 #ifdef BARE_M
 	uint32_t index = (uint32_t) mp_obj_get_int(oindex);
 	uint32_t data = (uint32_t) mp_obj_get_int(odata);
@@ -106,11 +105,22 @@ STATIC mp_obj_t mpf4bbram_write32_bbram (mp_obj_t oindex, mp_obj_t odata) {
     return mp_const_none;
 }
 
+STATIC mp_obj_t mpf4bbram_writef_bbram (mp_obj_t oindex, mp_obj_t odata) {
+#ifdef BARE_M
+	uint32_t index = (uint32_t) mp_obj_get_int(oindex);
+	float data = (float) mp_obj_get_float(odata);
+	*(__IO float *) (BKPSRAM_BASE + (index << 2)) = data;
+    return mp_obj_new_float(data);
+#else
+    return mp_const_none;
+#endif
+}
+
 STATIC mp_obj_t mpf4bbram_read32_bbreg (mp_obj_t oindex) {
 #ifdef BARE_M
 	__IO uint32_t data;
 	uint32_t index = (uint32_t) mp_obj_get_int(oindex);
-	data = *(__IO uint32_t *) (RTC_BKPREG_BASE + index);
+	data = *(__IO uint32_t *) (RTC_BKPREG_BASE + (index << 2));
 	return mp_obj_new_int(data);
 #else
     return mp_obj_new_int(0);
@@ -118,12 +128,22 @@ STATIC mp_obj_t mpf4bbram_read32_bbreg (mp_obj_t oindex) {
 }
 
 STATIC mp_obj_t mpf4bbram_read32_bbram (mp_obj_t oindex) {
-	//odata could be int, uint32 or float (single precision)
 #ifdef BARE_M
 	__IO uint32_t data;
 	uint32_t index = (uint32_t) mp_obj_get_int(oindex);
-	data = *(__IO uint32_t *) (BKPSRAM_BASE + index);
+	data = *(__IO uint32_t *) (BKPSRAM_BASE + (index << 2));
     return mp_obj_new_int(data);
+#else
+    return mp_obj_new_int(0);
+#endif
+}
+
+STATIC mp_obj_t mpf4bbram_readf_bbram (mp_obj_t oindex) {
+#ifdef BARE_M
+	__IO float data;
+	uint32_t index = (uint32_t) mp_obj_get_int(oindex);
+	data = *(__IO float *) (BKPSRAM_BASE + (index << 2));
+    return mp_obj_new_float(data);
 #else
     return mp_obj_new_int(0);
 #endif
@@ -135,8 +155,10 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_0(mpf4bbram_init_obj, mpf4bbram_init);
 STATIC MP_DEFINE_CONST_FUN_OBJ_0(mpf4bbram_kill_obj, mpf4bbram_kill);
 STATIC MP_DEFINE_CONST_FUN_OBJ_2(mpf4bbram_write32_bbreg_obj, mpf4bbram_write32_bbreg);
 STATIC MP_DEFINE_CONST_FUN_OBJ_2(mpf4bbram_write32_bbram_obj, mpf4bbram_write32_bbram);
+STATIC MP_DEFINE_CONST_FUN_OBJ_2(mpf4bbram_writef_bbram_obj, mpf4bbram_writef_bbram);
 STATIC MP_DEFINE_CONST_FUN_OBJ_1(mpf4bbram_read32_bbreg_obj, mpf4bbram_read32_bbreg);
 STATIC MP_DEFINE_CONST_FUN_OBJ_1(mpf4bbram_read32_bbram_obj, mpf4bbram_read32_bbram);
+STATIC MP_DEFINE_CONST_FUN_OBJ_1(mpf4bbram_readf_bbram_obj, mpf4bbram_readf_bbram);
 
 STATIC const mp_rom_map_elem_t mpf4bbram_module_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR___name__), MP_ROM_QSTR(MP_QSTR_mpf4bbram) },
@@ -146,8 +168,10 @@ STATIC const mp_rom_map_elem_t mpf4bbram_module_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR_kill), MP_ROM_PTR(&mpf4bbram_kill_obj) },
     { MP_ROM_QSTR(MP_QSTR_write32_bbreg), MP_ROM_PTR(&mpf4bbram_write32_bbreg_obj) },
     { MP_ROM_QSTR(MP_QSTR_write32_bbram), MP_ROM_PTR(&mpf4bbram_write32_bbram_obj) },
+    { MP_ROM_QSTR(MP_QSTR_writef_bbram), MP_ROM_PTR(&mpf4bbram_writef_bbram_obj) },
     { MP_ROM_QSTR(MP_QSTR_read32_bbreg), MP_ROM_PTR(&mpf4bbram_read32_bbreg_obj) },
-    { MP_ROM_QSTR(MP_QSTR_read32_bbram), MP_ROM_PTR(&mpf4bbram_read32_bbram_obj) }
+    { MP_ROM_QSTR(MP_QSTR_read32_bbram), MP_ROM_PTR(&mpf4bbram_read32_bbram_obj) },
+    { MP_ROM_QSTR(MP_QSTR_readf_bbram), MP_ROM_PTR(&mpf4bbram_readf_bbram_obj) }
 };
 
 STATIC MP_DEFINE_CONST_DICT(mpf4bbram_module_globals, mpf4bbram_module_globals_table);
